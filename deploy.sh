@@ -22,6 +22,10 @@ if [ "$1" == "--create" ]; then
 
     echo "Nombre de conteneurs docker à créer : ${nbre_machine}"
     echo "Debut de la creation du/des conteneur(s) ..."
+
+    #Recuperation de l'id max de conteneurs deja creer
+    id_max = sudo docker ps -a --format '{{.Names}}' | awk -F "-" -v user=$USER '$0 ~ user"-alpine" {print $3}' | sort -r | head -1
+
     #Boucle de creation de conteneurs
     for i in $(seq 1 $nbre_machine); do
         sudo docker run -tid --name $USER-alpine-$i alpine:latest
@@ -79,3 +83,8 @@ Options :
 "
 
 fi
+
+# Recuperer tous les nom de conteneur ayant une certaine nomenclature
+# Exemple : bedril-alpine-1, bedril-alpine-2, bedril-alpine3 ...
+# Script
+# sudo docker ps -a --format '{{.Names}}' | awk -v user=$USER '$0 ~ user"-alpine" {print $0}'
