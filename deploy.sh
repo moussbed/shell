@@ -24,10 +24,13 @@ if [ "$1" == "--create" ]; then
     echo "Debut de la creation du/des conteneur(s) ..."
 
     #Recuperation de l'id max de conteneurs deja creer
-    id_max = sudo docker ps -a --format '{{.Names}}' | awk -F "-" -v user=$USER '$0 ~ user"-alpine" {print $3}' | sort -r | head -1
+    idmax=`sudo docker ps -a --format '{{.Names}}' | awk -F "-" -v user=$USER '$0 ~ user"-alpine" {print $3}' | sort -r | head -1`
+
+    min=$(($idmax + 1))
+    max=$(($idmax + $nbre_machine))
 
     #Boucle de creation de conteneurs
-    for i in $(seq 1 $nbre_machine); do
+    for i in $(seq $min $max); do
         sudo docker run -tid --name $USER-alpine-$i alpine:latest
         echo "Conteneur $USER-alpine-$i crée"
     done
@@ -50,6 +53,11 @@ elif [ "$1" == "--infos" ]; then
     echo ""
     echo "Notre option est --infos"
     echo ""
+    echo "Informations des conteneurs "
+    echo ""
+    for conteneur in $(sudo docker ps -a | grep $USER-alpine | awk '{print $1}');do
+     sudo docker inspect -f ' => {{.Name}} - {{.NetworkSettings.IPAddress}}' $conteneur
+    done
 
 #Si option --start
 elif [ "$1" == "--start" ]; then
@@ -57,6 +65,8 @@ elif [ "$1" == "--start" ]; then
     echo ""
     echo "Notre option est --start"
     echo ""
+
+    sudo docker start $(sudo docker ps -a | grep $USER-alpine | awk '{print $1}')
 
 #Si option --ansible
 elif [ "$1" == "--ansible" ]; then
