@@ -11,7 +11,7 @@
 
 #Recuperation du nombre de machine passé en arguments [ ./deploy.sh --create 2]
 nbre_machine=1
-[ "$2" != "" ] && nbre_machine="$2"
+[ "$2" != "" ] && nbre_machine="$2" # operation ternaire
 
 #Si option --create
 if [ "$1" == "--create" ]; then
@@ -20,9 +20,14 @@ if [ "$1" == "--create" ]; then
     echo "Notre option est --create"
     echo ""
 
-    sudo docker run -tid --name $USER-alpine alpine:latest
-
-    echo " j'ai crée ${nbre_machine} machine(s)"
+    echo "Nombre de conteneurs docker à créer : ${nbre_machine}"
+    echo "Debut de la creation du/des conteneur(s) ..."
+    #Boucle de creation de conteneurs
+    for i in $(seq 1 $nbre_machine); do
+        sudo docker run -tid --name $USER-alpine-$i alpine:latest
+        echo "Conteneur $USER-alpine-$i crée"
+    done
+    echo "Fin de creation"
 
 #Si option --drop
 elif [ "$1" == "--drop" ]; then
@@ -30,9 +35,11 @@ elif [ "$1" == "--drop" ]; then
     echo ""
     echo "Notre option est --drop"
     echo ""
-
-    sudo docker rm -f $USER-alpine
-
+    echo "Debut de suppresion du/des conteneur(s) ..."
+    # Suppresion de la liste des conteneurs dont le nom contient
+    # $USER-alipine. Pas besoin d'utiliser la boucle
+    sudo docker rm -f $(sudo docker ps -a | grep $USER-alpine | awk '{print $1}')
+    echo "Fin de suppression "
 #Si option --infos
 elif [ "$1" == "--infos" ]; then
 
