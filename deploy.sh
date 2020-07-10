@@ -4,12 +4,50 @@
 #
 #   Description : Déploiement à la volée de conteneur
 #
-#   Auteur : Bedril 
+#   Auteur : Bedril
 #
 #   Date  : 10/07/2020
 #####################################################
 
-echo "
+#Si option --create
+if [ "$1" == "--create" ]; then
+
+    echo ""
+    echo "Notre option est --create"
+    echo ""
+
+#Si option --drop
+elif [ "$1" == "--drop" ]; then
+
+    echo ""
+    echo "Notre option est --drop"
+    echo ""
+
+#Si option --infos
+elif [ "$1" == "--infos" ]; then
+
+    echo ""
+    echo "Notre option est --infos"
+    echo ""
+
+#Si option --start
+elif [ "$1" == "--start" ]; then
+
+    echo ""
+    echo "Notre option est --start"
+    echo ""
+
+#Si option --ansible
+elif [ "$1" == "--ansible" ]; then
+
+    echo ""
+    echo "Notre option est --ansible"
+    echo ""
+
+# Si aucune option affichage de l'aide
+else
+
+    echo "
  
 Options : 
         - --create : lancer des conteneurs
@@ -23,3 +61,4 @@ Options :
         - --ansible : deploiement arborescence ansible
 "
 
+fi
