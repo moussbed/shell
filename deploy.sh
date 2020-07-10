@@ -9,6 +9,10 @@
 #   Date  : 10/07/2020
 #####################################################
 
+#Recuperation du nombre de machine passé en arguments [ ./deploy.sh --create 2]
+nbre_machine=1
+[ "$2" != "" ] && nbre_machine="$2"
+
 #Si option --create
 if [ "$1" == "--create" ]; then
 
@@ -16,12 +20,18 @@ if [ "$1" == "--create" ]; then
     echo "Notre option est --create"
     echo ""
 
+    sudo docker run -tid --name $USER-alpine alpine:latest
+
+    echo " j'ai crée ${nbre_machine} machine(s)"
+
 #Si option --drop
 elif [ "$1" == "--drop" ]; then
 
     echo ""
     echo "Notre option est --drop"
     echo ""
+
+    sudo docker rm -f $USER-alpine
 
 #Si option --infos
 elif [ "$1" == "--infos" ]; then
